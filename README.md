@@ -1,6 +1,6 @@
 ---
 services: microsoft-information-protection
-platforms: csharp
+platforms: dotnet
 author: tommoser
 level: 200
 client: Desktop
