@@ -11,8 +11,8 @@ namespace MipSdkDotNetQuickstart
 {
     class Program
     {
-        private const string clientId = "aed76448-c9a0-4035-b77c-1f3f4e69a489";
-        private const string appName = "MipSdkDotNetQuickstart";
+        private const string clientId = "YOUR CLIENT ID";
+        private const string appName = "YOUR APP NAME";
 
 
         static void Main(string[] args)
