@@ -7,5 +7,5 @@ client: Desktop
 service: Microsoft Information Protection
 ---
 
-# mipsdk-dotnet-file-quickstart
+# MipSdk-Dotnet-File-Quickstart
 This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to label and read a label from a file. 
