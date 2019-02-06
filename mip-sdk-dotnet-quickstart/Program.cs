@@ -85,7 +85,7 @@ namespace MipSdkDotNetQuickstart
             // Read label from the previously labeled file.
             var contentLabel = action.GetLabel(options);
                                                     
-            // Display the label.
+            // Display the label with protection information.
             Console.WriteLine(string.Format("File Label: {0} \r\nIsProtected: {1}", contentLabel.Label.Name, contentLabel.IsProtectionAppliedFromLabel.ToString()));
             Console.WriteLine("Press a key to quit.");
             Console.ReadKey();
