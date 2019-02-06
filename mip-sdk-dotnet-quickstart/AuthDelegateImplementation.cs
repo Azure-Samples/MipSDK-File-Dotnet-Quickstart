@@ -34,6 +34,7 @@ namespace MipSdkDotNetQuickstart
             }
         }
 
+        // Use this method to force auth to get a token and store identity. 
         public Identity GetUserIdentity()
         {
             try
