@@ -1,4 +1,31 @@
-﻿using System;
+﻿/*
+*
+* Copyright (c) Microsoft Corporation.
+* All rights reserved.
+*
+* This code is licensed under the MIT License.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files(the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions :
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*
+*/
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.InformationProtection;
 using Microsoft.InformationProtection.File;
@@ -11,8 +38,8 @@ namespace MipSdkDotNetQuickstart
 {
     class Program
     {
-        private const string clientId = "YOUR CLIENT ID";
-        private const string appName = "YOUR APP NAME";
+        private const string clientId = "aed76448-c9a0-4035-b77c-1f3f4e69a489";
+        private const string appName = "Sdk Test App";
 
 
         static void Main(string[] args)
@@ -52,8 +79,8 @@ namespace MipSdkDotNetQuickstart
                         
 
             // Set paths and label ID
-            string inputFilePath = @"D:\MIP\TestFiles\demo1.docx";            
-            string outputFilePath = @"D:\MIP\TestFiles\Test1_modified.docx";
+            string inputFilePath = @"D:\MIP\TestFiles\Public.docx";            
+            string outputFilePath = @"D:\MIP\TestFiles\Public_modified.docx";
 
             // Set file options from FileOptions struct. Used to set various parameters for FileHandler
             Action.FileOptions options = new Action.FileOptions
