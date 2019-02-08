@@ -90,16 +90,17 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dotnet_wrapper, Version=1.1.210.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.InformationProtection.File.1.1.210\lib\net40\dotnet_wrapper.dll</HintPath>
+    <Reference Include="dotnet_wrapper, Version=1.1.214.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.InformationProtection.File.1.1.214\lib\net40\dotnet_wrapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.4.5.0\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
-    <Reference Include="mip_dotnet_api, Version=1.1.210.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.InformationProtection.File.1.1.210\lib\net40\mip_dotnet_api.dll</HintPath>
+    <Reference Include="mip_dotnet_api, Version=1.1.214.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.InformationProtection.File.1.1.214\lib\net40\mip_dotnet_api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
@@ -139,11 +140,11 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.InformationProtection.File.1.1.210\build\net40\Microsoft.InformationProtection.File.targets" Condition="Exists('..\packages\Microsoft.InformationProtection.File.1.1.210\build\net40\Microsoft.InformationProtection.File.targets')" />
+  <Import Project="..\packages\Microsoft.InformationProtection.File.1.1.214\build\net40\Microsoft.InformationProtection.File.targets" Condition="Exists('..\packages\Microsoft.InformationProtection.File.1.1.214\build\net40\Microsoft.InformationProtection.File.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.InformationProtection.File.1.1.210\build\net40\Microsoft.InformationProtection.File.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.InformationProtection.File.1.1.210\build\net40\Microsoft.InformationProtection.File.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.InformationProtection.File.1.1.214\build\net40\Microsoft.InformationProtection.File.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.InformationProtection.File.1.1.214\build\net40\Microsoft.InformationProtection.File.targets'))" />
   </Target>
 </Project>

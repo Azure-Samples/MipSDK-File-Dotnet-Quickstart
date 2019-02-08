@@ -26,19 +26,17 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 using Microsoft.InformationProtection;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+
 
 namespace MipSdkDotNetQuickstart
 {
     public class AuthDelegateImplementation : IAuthDelegate
     {
         // Set the redirect URI from the AAD Application Registration.
-        private readonly string redirectUri = "mip-sdk://authorization";
+        private static readonly string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
         private ApplicationInfo appInfo;        
         private TokenCache tokenCache = new TokenCache();
         
@@ -58,16 +56,18 @@ namespace MipSdkDotNetQuickstart
         /// <param name="identity"></param>
         /// <param name="authority"></param>
         /// <param name="resource"></param>
-        /// <returns></returns>
+        /// <returns>The OAuth2 token for the user</returns>
         public string AcquireToken(Identity identity, string authority, string resource)
         {
             try
             { 
                 // Create an auth context using the provided authority and token cache
                 AuthenticationContext authContext = new AuthenticationContext(authority, tokenCache);
-
+                               
                 // Attempt to acquire a token for the given resource, using the ApplicationId, redirectUri, and Identity
-                var result = authContext.AcquireTokenAsync(resource, appInfo.ApplicationId, new Uri(redirectUri), new PlatformParameters(PromptBehavior.Always, null), new UserIdentifier(identity.Email, UserIdentifierType.RequiredDisplayableId)).Result;
+                var result = authContext.AcquireTokenAsync(resource, appInfo.ApplicationId, new Uri(redirectUri), new PlatformParameters(PromptBehavior.Auto, null), new UserIdentifier(identity.Email, UserIdentifierType.RequiredDisplayableId)).Result;
+                
+                // Return the token. The token is sent to the resource.
                 return result.AccessToken;
             }
             catch (Exception ex)
@@ -76,7 +76,11 @@ namespace MipSdkDotNetQuickstart
             }
         }
 
-        // Use this method to force auth to get a token and store identity. 
+        /// <summary>
+        /// The GetUserIdentity() method is used to pre-identify the user and obtain the UPN. 
+        /// The UPN is later passed set on FileEngineSettings for service location.
+        /// </summary>
+        /// <returns>Microsoft.InformationProtection.Identity</returns>
         public Identity GetUserIdentity()
         {
             try

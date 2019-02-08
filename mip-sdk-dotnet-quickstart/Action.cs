@@ -60,8 +60,11 @@ namespace MipSdkDotNetQuickstart
             public bool IsAuditDiscoveryEnabled;
             public bool GenerateChangeAuditEvent;
         }
-
-        // Accept ApplicationInfo in contructor parameter. AppInfo used to initialize the AuthDelegate.
+        
+        /// <summary>
+        /// Constructor for Action class. Pass in AppInfo to simplify passing settings to AuthDelegate.
+        /// </summary>
+        /// <param name="appInfo"></param>
         public Action(ApplicationInfo appInfo)
         {
             this.appInfo = appInfo;
@@ -138,7 +141,7 @@ namespace MipSdkDotNetQuickstart
                 var engineSettings = new FileEngineSettings("", "", "en-US")
                 {
                     // Provide the identity for service discovery.
-                    Identity = identity
+                    Identity = identity                    
                 };
 
                 // Add the IFileEngine to the profile and return.
@@ -234,7 +237,7 @@ namespace MipSdkDotNetQuickstart
 
             catch(Exception ex)
             {
-                return false;
+                throw ex;
             }
         }
 
