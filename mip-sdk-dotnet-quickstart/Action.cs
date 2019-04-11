@@ -60,7 +60,7 @@ namespace MipSdkDotNetQuickstart
             public bool IsAuditDiscoveryEnabled;
             public bool GenerateChangeAuditEvent;
         }
-        
+
         /// <summary>
         /// Constructor for Action class. Pass in AppInfo to simplify passing settings to AuthDelegate.
         /// </summary>
@@ -73,23 +73,17 @@ namespace MipSdkDotNetQuickstart
             authDelegate = new AuthDelegateImplementation(this.appInfo);
 
             // Initialize SDK DLLs. If DLLs are missing or wrong type, this will throw an exception
-            try
-            {
-                MIP.Initialize(MipComponent.File);
-                
-                // This method in AuthDelegateImplementation triggers auth against Graph so that we can get the user ID.
-                var id = authDelegate.GetUserIdentity();
 
-                // Create profile.
-                profile = CreateFileProfile(appInfo, ref authDelegate);
+            MIP.Initialize(MipComponent.File);
 
-                // Create engine providing Identity from authDelegate to assist with service discovery.
-                engine = CreateFileEngine(id);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            // This method in AuthDelegateImplementation triggers auth against Graph so that we can get the user ID.
+            var id = authDelegate.GetUserIdentity();
+
+            // Create profile.
+            profile = CreateFileProfile(appInfo, ref authDelegate);
+
+            // Create engine providing Identity from authDelegate to assist with service discovery.
+            engine = CreateFileEngine(id);
         }
 
         /// <summary>
