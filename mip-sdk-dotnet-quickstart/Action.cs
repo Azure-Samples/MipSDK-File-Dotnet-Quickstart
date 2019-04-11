@@ -54,7 +54,7 @@ namespace MipSdkDotNetQuickstart
             public string FileName;
             public string OutputName;
             public string LabelId;
-            public ContentState ContentState;
+            public DataState DataState;
             public AssignmentMethod AssignmentMethod;
             public ActionSource ActionSource;
             public bool IsAuditDiscoveryEnabled;
@@ -93,6 +93,16 @@ namespace MipSdkDotNetQuickstart
         }
 
         /// <summary>
+        /// Null refs to engine and profile and release all MIP resources.
+        /// </summary>
+        ~Action()
+        {
+            engine = null;
+            profile = null;
+            MIP.ReleaseAllResources();    
+        }
+
+        /// <summary>
         /// Creates an IFileProfile and returns.
         /// IFileProfile is the root of all MIP SDK File API operations. Typically only one should be created per app.
         /// </summary>
@@ -101,8 +111,7 @@ namespace MipSdkDotNetQuickstart
         /// <returns></returns>
         private IFileProfile CreateFileProfile(ApplicationInfo appInfo, ref AuthDelegateImplementation authDelegate)
         {
-            try
-            {
+
                 // Initialize file profile settings to create/use local state.                
                 var profileSettings = new FileProfileSettings("mip_data", false, authDelegate, new ConsentDelegateImplementation(), appInfo, LogLevel.Trace);
 
@@ -110,12 +119,7 @@ namespace MipSdkDotNetQuickstart
                 // IFileProfile is the root of all SDK operations for a given application.
                 var profile = Task.Run(async () => await MIP.LoadFileProfileAsync(profileSettings)).Result;
                 return profile;
-            }
-
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            
         }
 
         /// <summary>
@@ -128,32 +132,26 @@ namespace MipSdkDotNetQuickstart
         /// <returns></returns>
         private IFileEngine CreateFileEngine(Identity identity)
         {
-            try
+
+            // If the profile hasn't been created, do that first. 
+            if (profile == null)
             {
-                // If the profile hasn't been created, do that first. 
-                if(profile == null)
-                {
-                    profile = CreateFileProfile(appInfo, ref authDelegate);
-                }
-
-                // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
-                // Locale settings are supported and should be provided based on the machine locale, particular for client applications.
-                var engineSettings = new FileEngineSettings("", "", "en-US")
-                {
-                    // Provide the identity for service discovery.
-                    Identity = identity                    
-                };
-
-                // Add the IFileEngine to the profile and return.
-                var engine = Task.Run(async () => await profile.AddEngineAsync(engineSettings)).Result;
-                return engine;
+                profile = CreateFileProfile(appInfo, ref authDelegate);
             }
 
-            catch (Exception ex)
+            // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
+            // Locale settings are supported and should be provided based on the machine locale, particular for client applications.
+            var engineSettings = new FileEngineSettings("", "", "en-US")
             {
-                throw ex;
-            }
+                // Provide the identity for service discovery.
+                Identity = identity
+            };
+
+            // Add the IFileEngine to the profile and return.
+            var engine = Task.Run(async () => await profile.AddEngineAsync(engineSettings)).Result;
+            return engine;
         }
+    
 
         /// <summary>
         /// Method creates a file handler and returns to the caller. 
@@ -162,18 +160,11 @@ namespace MipSdkDotNetQuickstart
         /// <param name="options">Struct provided to set various options for the handler.</param>
         /// <returns></returns>
         private IFileHandler CreateFileHandler(FileOptions options)
-        {
-            try
-            {
+        {            
                 // Create the handler using options from FileOptions. Assumes that the engine was previously created and stored in private engine object.
                 // There's probably a better way to pass/store the engine, but this is a sample ;)
-                var handler = Task.Run(async () => await engine.CreateFileHandlerAsync(options.FileName, options.FileName, options.ContentState, options.IsAuditDiscoveryEnabled)).Result;
-                return handler;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                var handler = Task.Run(async () => await engine.CreateFileHandlerAsync(options.FileName, options.FileName, options.IsAuditDiscoveryEnabled)).Result;
+                return handler;           
         }
 
 
@@ -182,19 +173,11 @@ namespace MipSdkDotNetQuickstart
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Label> ListLabels()
-        {
-            try
-            {
+        {  
                 // Get labels from the engine and return.
                 // For a user principal, these will be user specific.
                 // For a service principal, these may be service specific or global.
-                return engine.SensitivityLabels;
-            }
-
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                return engine.SensitivityLabels;          
         }
 
         /// <summary>
@@ -205,60 +188,44 @@ namespace MipSdkDotNetQuickstart
         /// <returns></returns>
         public bool SetLabel(FileOptions options)
         {
-            try
+
+            // LabelingOptions allows us to set the metadata associated with the labeling operations.
+            // Review the API Spec at https://aka.ms/mipsdkdocs for details
+            LabelingOptions labelingOptions = new LabelingOptions()
             {
-                // LabelingOptions allows us to set the metadata associated with the labeling operations.
-                // Review the API Spec at https://aka.ms/mipsdkdocs for details
-                LabelingOptions labelingOptions = new LabelingOptions()
-                {
-                    ActionSource = options.ActionSource,
-                    AssignmentMethod = options.AssignmentMethod
-                };
-                
-                var handler = CreateFileHandler(options);
+                ActionSource = options.ActionSource,
+                AssignmentMethod = options.AssignmentMethod
+            };
 
-                // Use the SetLabel method on the handler, providing label ID and LabelingOptions
-                // The handler already references a file, so those details aren't needed.
-                handler.SetLabel(options.LabelId, labelingOptions);
+            var handler = CreateFileHandler(options);
 
-                // The change isn't committed to the file referenced by the handler until CommitAsync() is called.
-                // Pass the desired output file name in to the CommitAsync() function.
-                var result = Task.Run(async() => await handler.CommitAsync(options.OutputName)).Result;
+            // Use the SetLabel method on the handler, providing label ID and LabelingOptions
+            // The handler already references a file, so those details aren't needed.
+            handler.SetLabel(options.LabelId, labelingOptions);
 
-                // If the commit was successful and GenerateChangeAuditEvents is true, call NotifyCommitSuccessful()
-                if(result && options.GenerateChangeAuditEvent)
-                {
-                    // Submits and audit event about the labeling action to Azure Information Protection Analytics 
-                    handler.NotifyCommitSuccessful(options.FileName);
-                }
+            // The change isn't committed to the file referenced by the handler until CommitAsync() is called.
+            // Pass the desired output file name in to the CommitAsync() function.
+            var result = Task.Run(async () => await handler.CommitAsync(options.OutputName)).Result;
 
-                return result;
+            // If the commit was successful and GenerateChangeAuditEvents is true, call NotifyCommitSuccessful()
+            if (result && options.GenerateChangeAuditEvent)
+            {
+                // Submits and audit event about the labeling action to Azure Information Protection Analytics 
+                handler.NotifyCommitSuccessful(options.FileName);
             }
 
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+            return result;
         }
-
+                
         /// <summary>
         /// Read the label from a file provided via FileOptions.
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
         public ContentLabel GetLabel(FileOptions options)
-        {
-            try
-            {
+        {           
                 var handler = CreateFileHandler(options);
-                return handler.Label;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        
+                return handler.Label;         
+        }        
     }
 }

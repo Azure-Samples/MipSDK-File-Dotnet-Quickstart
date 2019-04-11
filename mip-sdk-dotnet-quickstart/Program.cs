@@ -96,7 +96,7 @@ namespace MipSdkDotNetQuickstart
                     OutputName = outputFilePath,
                     ActionSource = ActionSource.Manual,
                     AssignmentMethod = AssignmentMethod.Standard,
-                    ContentState = ContentState.Rest,
+                    DataState = DataState.Rest,
                     GenerateChangeAuditEvent = true,
                     IsAuditDiscoveryEnabled = true,
                     LabelId = labelId
