@@ -73,10 +73,10 @@ The **Registered app** blade should now be displayed.
 ### Update Client ID, RedirectURI, and Application Name
 
 1. Open **app.config**.
-2. Find line 7 and replace **YOUR CLIENT ID** with the client ID copied from the AAD App Registration.
-3. Find line 8 and replace **YOUR REDIRECT URI** with the Redirect URI copied from the AAD App Registration.
-4. Find line 8 and replace **YOUR APP NAME** with the friendly name for your application.
-5. Find line 9 and replace **YOUR APP VERSION** with the version of your application.
+2. Replace **YOUR CLIENT ID** with the client ID copied from the AAD App Registration.
+3. Replace **YOUR REDIRECT URI** with the Redirect URI copied from the AAD App Registration.
+4. Replace **YOUR APP NAME** with the friendly name for your application.
+5. Replace **YOUR APP VERSION** with the version of your application.
 
 ## Run the Sample
 
