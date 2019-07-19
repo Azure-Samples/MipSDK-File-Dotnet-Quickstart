@@ -47,6 +47,7 @@ namespace MipSdkDotNetQuickstart
         private ApplicationInfo appInfo;
         private IFileProfile profile;
         private IFileEngine engine;
+        private MipContext mipContext;
 
         // Used to pass in options for labeling the file.
         public struct FileOptions
@@ -93,7 +94,7 @@ namespace MipSdkDotNetQuickstart
         {
             engine = null;
             profile = null;
-            MIP.ReleaseAllResources();    
+            mipContext = null; 
         }
 
         /// <summary>
@@ -105,9 +106,14 @@ namespace MipSdkDotNetQuickstart
         /// <returns></returns>
         private IFileProfile CreateFileProfile(ApplicationInfo appInfo, ref AuthDelegateImplementation authDelegate)
         {
+            // Initialize MipContext
+            mipContext = MIP.CreateMipContext(appInfo, "mip_data", LogLevel.Trace, null, null);
 
                 // Initialize file profile settings to create/use local state.                
-                var profileSettings = new FileProfileSettings("mip_data", false, authDelegate, new ConsentDelegateImplementation(), appInfo, LogLevel.Trace);
+                var profileSettings = new FileProfileSettings(mipContext, 
+                    CacheStorageType.OnDiskEncrypted, 
+                    authDelegate, 
+                    new ConsentDelegateImplementation());
 
                 // Use MIP.LoadFileProfileAsync() providing settings to create IFileProfile. 
                 // IFileProfile is the root of all SDK operations for a given application.
@@ -187,7 +193,6 @@ namespace MipSdkDotNetQuickstart
             // Review the API Spec at https://aka.ms/mipsdkdocs for details
             LabelingOptions labelingOptions = new LabelingOptions()
             {
-                ActionSource = options.ActionSource,
                 AssignmentMethod = options.AssignmentMethod
             };
 
@@ -195,7 +200,7 @@ namespace MipSdkDotNetQuickstart
 
             // Use the SetLabel method on the handler, providing label ID and LabelingOptions
             // The handler already references a file, so those details aren't needed.
-            handler.SetLabel(options.LabelId, labelingOptions);
+            handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
 
             // The change isn't committed to the file referenced by the handler until CommitAsync() is called.
             // Pass the desired output file name in to the CommitAsync() function.

@@ -57,7 +57,7 @@ namespace MipSdkDotNetQuickstart
         /// <param name="authority"></param>
         /// <param name="resource"></param>
         /// <returns>The OAuth2 token for the user</returns>
-        public string AcquireToken(Identity identity, string authority, string resource)
+        public string AcquireToken(Identity identity, string authority, string resource, string claims)
         {
             try
             { 
