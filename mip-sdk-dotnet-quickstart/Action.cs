@@ -200,7 +200,23 @@ namespace MipSdkDotNetQuickstart
 
             // Use the SetLabel method on the handler, providing label ID and LabelingOptions
             // The handler already references a file, so those details aren't needed.
-            handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
+
+            try
+            {
+                handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
+            }
+
+            catch (Microsoft.InformationProtection.Exceptions.JustificationRequiredException)
+            {
+                Console.Write("Please provide justification: ");
+                string justification = Console.ReadLine();
+
+                labelingOptions.IsDowngradeJustified = true;
+                labelingOptions.JustificationMessage = justification;
+
+                handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
+            }
+
 
             // The change isn't committed to the file referenced by the handler until CommitAsync() is called.
             // Pass the desired output file name in to the CommitAsync() function.
