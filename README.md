@@ -1,10 +1,11 @@
 ---
-services: microsoft-information-protection
-platforms: dotnet
-author: tommoser
-level: 200
-client: Desktop
-service: Microsoft Information Protection
+page_type: sample
+languages:
+- csharp
+products:
+- azure
+description: "This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to label and read a label from a file."
+urlFragment: MipSdk-Dotnet-File-Quickstart
 ---
 
 # MipSdk-Dotnet-File-Quickstart
