@@ -135,7 +135,7 @@ namespace MipSdkDotNetQuickstart
             // If the profile hasn't been created, do that first. 
             if (profile == null)
             {
-                profile = CreateFileProfile(appInfo, ref authDelegate);
+                profile = CreateFileProfile(appInfo);
             }
 
             // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
