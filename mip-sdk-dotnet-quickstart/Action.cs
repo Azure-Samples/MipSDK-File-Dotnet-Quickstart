@@ -81,7 +81,7 @@ namespace MipSdkDotNetQuickstart
             var id = authDelegate.GetUserIdentity();
 
             // Create profile.
-            profile = CreateFileProfile(appInfo, ref authDelegate);
+            profile = CreateFileProfile(appInfo);
 
             // Create engine providing Identity from authDelegate to assist with service discovery.
             engine = CreateFileEngine(id);
@@ -104,7 +104,7 @@ namespace MipSdkDotNetQuickstart
         /// <param name="appInfo"></param>
         /// <param name="authDelegate"></param>
         /// <returns></returns>
-        private IFileProfile CreateFileProfile(ApplicationInfo appInfo, ref AuthDelegateImplementation authDelegate)
+        private IFileProfile CreateFileProfile(ApplicationInfo appInfo)
         {
             // Initialize MipContext
             mipContext = MIP.CreateMipContext(appInfo, "mip_data", LogLevel.Trace, null, null);
