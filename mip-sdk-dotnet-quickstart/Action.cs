@@ -140,7 +140,7 @@ namespace MipSdkDotNetQuickstart
 
             // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
             // Locale settings are supported and should be provided based on the machine locale, particular for client applications.
-            var engineSettings = new FileEngineSettings("", authDelegate, "", "en-US")
+            var engineSettings = new FileEngineSettings(identity.Email, authDelegate, "", "en-US")
             {
                 // Provide the identity for service discovery.
                 Identity = identity
