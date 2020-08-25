@@ -55,6 +55,8 @@ Authentication against the Azure AD tenant requires creating a native applicatio
 
 The **Application registration** screen should now be displaying your new application.
 
+### Add API Permissions 
+
 1. Select **API Permissions**
 2. Select **Add a permission**
 3. Select **Azure Rights Management Services**
@@ -66,6 +68,14 @@ The **Application registration** screen should now be displaying your new applic
 9. Select **Delegated permissions**
 10. Check **UnifiedPolicy.User.Read** then select **Add permissions**
 11. In the **API permissions** menu, select **Grant admin consent for <TENANT NAME>** and confirm.
+
+### Set Redirect URI
+
+1. Select **Authentication**.
+2. Select **Add a platform**.
+3. Select **Mobile and desktop applications**
+4. Select the default native client redirect URI, which should look similar to **https://login.microsoftonline.com/common/oauth2/nativeclient**.
+5. Select **configure** and be sure to save and changes if required. 
 
 ### Update Client ID, RedirectURI, and Application Name
 
