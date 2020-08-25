@@ -91,11 +91,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.7\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.InformationProtection, Version=1.6.103.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.InformationProtection.File.1.6.103\lib\net40\Microsoft.InformationProtection.dll</HintPath>
+    <Reference Include="Microsoft.Identity.Client, Version=4.17.1.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Identity.Client.4.17.1\lib\net461\Microsoft.Identity.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -173,11 +170,4 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.InformationProtection.File.1.6.103\build\net40\Microsoft.InformationProtection.File.targets" Condition="Exists('..\packages\Microsoft.InformationProtection.File.1.6.103\build\net40\Microsoft.InformationProtection.File.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.InformationProtection.File.1.6.103\build\net40\Microsoft.InformationProtection.File.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.InformationProtection.File.1.6.103\build\net40\Microsoft.InformationProtection.File.targets'))" />
-  </Target>
 </Project>

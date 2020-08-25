@@ -33,6 +33,8 @@ using System.Threading.Tasks;
 using Microsoft.InformationProtection.File;
 using Microsoft.InformationProtection.Exceptions;
 using Microsoft.InformationProtection;
+using Microsoft.InformationProtection.Protection;
+using System.Runtime.InteropServices;
 
 namespace MipSdkDotNetQuickstart
 {
@@ -143,11 +145,12 @@ namespace MipSdkDotNetQuickstart
             var engineSettings = new FileEngineSettings(identity.Email, authDelegate, "", "en-US")
             {
                 // Provide the identity for service discovery.
-                Identity = identity
+                Identity = identity                
             };
 
             // Add the IFileEngine to the profile and return.
             var engine = Task.Run(async () => await profile.AddEngineAsync(engineSettings)).Result;
+            
             return engine;
         }
     
@@ -199,7 +202,7 @@ namespace MipSdkDotNetQuickstart
 
             // Use the SetLabel method on the handler, providing label ID and LabelingOptions
             // The handler already references a file, so those details aren't needed.
-
+           
             try
             {
                 handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
@@ -241,5 +244,13 @@ namespace MipSdkDotNetQuickstart
                 var handler = CreateFileHandler(options);
                 return handler.Label;         
         }        
+
+        public void Inspect(FileOptions options)
+        {
+            var handler = CreateFileHandler(options);
+            var result = handler.InspectAsync().Result;
+            
+            
+        }
     }
 }
