@@ -90,10 +90,12 @@ namespace MipSdkDotNetQuickstart
         }
 
         /// <summary>
-        /// Null refs to engine and profile and release all MIP resources.
+        /// Unload engine, null refs to engine and profile and release all MIP resources.
         /// </summary>
         ~Action()
         {
+            // Unload the engine. This is less important for apps that create a single, long lived engine.            
+            profile.UnloadEngineAsync(engine.Settings.EngineId);
             engine = null;
             profile = null;
             mipContext = null; 
