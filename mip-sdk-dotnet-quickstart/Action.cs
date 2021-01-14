@@ -96,7 +96,7 @@ namespace MipSdkDotNetQuickstart
         {
             // Unload the engine. This is less important for apps that create a single, long lived engine.            
             profile.UnloadEngineAsync(engine.Settings.EngineId);
-            engine = null;
+            engine.Dispose();
             profile = null;
             mipContext = null; 
         }
