@@ -88,6 +88,12 @@ namespace MipSdkDotNetQuickstart
             Console.Write("Enter an output file path: ");
             string outputFilePath = Console.ReadLine();
 
+            Console.Write("Would you like to enable tracking for this document? [y/N] ");
+            var trackingInput = Console.ReadLine();
+            bool enableTracking = false;
+            if (trackingInput.ToLower() == "y") enableTracking = true;
+
+
             // Set file options from FileOptions struct. Used to set various parameters for FileHandler
             Action.FileOptions options = new Action.FileOptions
             {
@@ -98,22 +104,36 @@ namespace MipSdkDotNetQuickstart
                 DataState = DataState.Rest,
                 GenerateChangeAuditEvent = true,
                 IsAuditDiscoveryEnabled = true,
-                LabelId = labelId
+                LabelId = labelId,
+                EnableDocTracking = enableTracking,
+                NotifyOwnerOnOpen = false
             };
 
             //Set the label on the file handler object
             Console.WriteLine(string.Format("Set label ID {0} on {1}", labelId, inputFilePath));
 
-            // Set label, commit change to outputfile, and send audit event if enabled.
-            var result = action.SetLabel(options);
-
+            // Set label, commit change to outputfile, and send audit event if enabled.            
             Console.WriteLine(string.Format("Committed label ID {0} to {1}", labelId, outputFilePath));
-
-            // Create a new handler to read the labeled file metadata.           
-            Console.WriteLine(string.Format("Getting the label committed to file: {0}", outputFilePath));
+            var result = action.SetLabel(options);
 
             // Update options to read the previously generated file output.
             options.FileName = options.OutputName;
+
+            // Enable tracking            
+            if (options.EnableDocTracking)
+            {
+                if (action.EnableDocTracking(options))
+                {
+                    Console.WriteLine("File enabled for doc tracking.");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to enable document for tracking.");
+                }
+            }
+
+            // Create a new handler to read the labeled file metadata.           
+            Console.WriteLine(string.Format("Getting the label committed to file: {0}", outputFilePath));
 
             // Read label from the previously labeled file.
             var contentLabel = action.GetLabel(options);
@@ -121,9 +141,24 @@ namespace MipSdkDotNetQuickstart
             // Display the label with protection information.
             Console.WriteLine(string.Format("File Label: {0} \r\nIsProtected: {1}", contentLabel.Label.Name, contentLabel.IsProtectionAppliedFromLabel.ToString()));
 
+            Console.Write("Revoke access to the document? [y/N] ");
 
-            Console.WriteLine("Press a key to quit.");
-            Console.ReadKey();
+            var revokeInput = Console.ReadLine();
+            if (revokeInput.ToLower() == "y")
+            {
+
+                if (action.RevokeDocument(options))
+                {
+                    Console.WriteLine("Document revoked.");
+                }
+                else
+                {
+                    Console.WriteLine("Failed to revoke document.");
+                }
+
+                Console.WriteLine("Press a key to quit.");
+                Console.ReadKey();
+            }
         }
     }
 }

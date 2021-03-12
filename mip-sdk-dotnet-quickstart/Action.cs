@@ -33,8 +33,7 @@ using System.Threading.Tasks;
 using Microsoft.InformationProtection.File;
 using Microsoft.InformationProtection.Exceptions;
 using Microsoft.InformationProtection;
-using Microsoft.InformationProtection.Protection;
-using System.Runtime.InteropServices;
+
 
 namespace MipSdkDotNetQuickstart
 {
@@ -62,6 +61,8 @@ namespace MipSdkDotNetQuickstart
             public ActionSource ActionSource;
             public bool IsAuditDiscoveryEnabled;
             public bool GenerateChangeAuditEvent;
+            public bool EnableDocTracking;
+            public bool NotifyOwnerOnOpen;
         }
 
         /// <summary>
@@ -202,8 +203,7 @@ namespace MipSdkDotNetQuickstart
             var handler = CreateFileHandler(options);
 
             // Use the SetLabel method on the handler, providing label ID and LabelingOptions
-            // The handler already references a file, so those details aren't needed.
-           
+            // The handler already references a file, so those details aren't needed.           
             try
             {
                 handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
@@ -219,8 +219,7 @@ namespace MipSdkDotNetQuickstart
 
                 handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
             }
-
-
+          
             // The change isn't committed to the file referenced by the handler until CommitAsync() is called.
             // Pass the desired output file name in to the CommitAsync() function.
             var result = Task.Run(async () => await handler.CommitAsync(options.OutputName)).Result;
@@ -246,12 +245,71 @@ namespace MipSdkDotNetQuickstart
                 return handler.Label;         
         }        
 
-        public void Inspect(FileOptions options)
+        /// <summary>
+        /// Using the FileName from FileOptions, creates a new handler and enables tracking for a protected file.
+        /// If file isn't protected, will throw an exception. 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public bool EnableDocTracking(FileOptions options)
         {
             var handler = CreateFileHandler(options);
-            var result = handler.InspectAsync().Result;
-            
-            
+            // Doc tracking requires that the document is protected. App should check for protection before attempting to track or revoke. 
+            if (options.EnableDocTracking && handler.Protection != null)
+            {
+
+                try
+                {
+                    Task.Run(async () => await handler.RegisterContentForTrackingAndRevocationAsync(options.NotifyOwnerOnOpen)).Wait();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to enable tracking for document.");
+                    Console.WriteLine(e.InnerException);
+                    Console.WriteLine(e.StackTrace);
+                    return false;
+                }                
+            }
+            else
+            {
+                Console.WriteLine("Document isn't protected. Cannot enable tracking." );
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Using the FileName from FileOptions, creates a new handler and tries to revoke a protected file.
+        /// If file isn't protected, will throw an exception. 
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public bool RevokeDocument(FileOptions options)
+        {
+            var handler = CreateFileHandler(options);
+
+            // Doc tracking requires that the document is protected. App should check for protection before attempting to track or revoke. 
+            if (handler.Protection != null)
+            {
+                try
+                {
+                    handler.RevokeContentAsync().GetAwaiter().GetResult();
+                    return true;
+                }
+
+                catch (Exception e)
+                {
+                    Console.WriteLine("Failed to revoke document.");
+                    Console.WriteLine(e.InnerException);
+                    Console.WriteLine(e.StackTrace);
+                    return false;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Cannot revoke an unprotected document. ");
+                return false;
+            }
         }
     }
 }
