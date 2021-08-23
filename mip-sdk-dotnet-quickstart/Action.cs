@@ -111,18 +111,20 @@ namespace MipSdkDotNetQuickstart
         private IFileProfile CreateFileProfile(ApplicationInfo appInfo)
         {
             // Initialize MipContext
-            mipContext = MIP.CreateMipContext(appInfo, "mip_data", LogLevel.Trace, null, null);
+            MipConfiguration mipConfig = new MipConfiguration(appInfo, "mip_data", LogLevel.Trace, false);
 
-                // Initialize file profile settings to create/use local state.                
-                var profileSettings = new FileProfileSettings(mipContext, 
-                    CacheStorageType.OnDiskEncrypted, 
-                    new ConsentDelegateImplementation());
-
-                // Use MIP.LoadFileProfileAsync() providing settings to create IFileProfile. 
-                // IFileProfile is the root of all SDK operations for a given application.
-                var profile = Task.Run(async () => await MIP.LoadFileProfileAsync(profileSettings)).Result;
-                return profile;
+            mipContext = MIP.CreateMipContext(mipConfig);
             
+            // Initialize file profile settings to create/use local state.                
+            var profileSettings = new FileProfileSettings(mipContext,
+                CacheStorageType.OnDiskEncrypted,
+                new ConsentDelegateImplementation());
+
+            // Use MIP.LoadFileProfileAsync() providing settings to create IFileProfile. 
+            // IFileProfile is the root of all SDK operations for a given application.
+            var profile = Task.Run(async () => await MIP.LoadFileProfileAsync(profileSettings)).Result;
+            return profile;
+
         }
 
         /// <summary>
