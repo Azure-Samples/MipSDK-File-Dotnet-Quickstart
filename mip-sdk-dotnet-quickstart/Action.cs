@@ -42,7 +42,7 @@ namespace MipSdkDotNetQuickstart
     /// For this sample, only profile, engine, and handler creation are defined. 
     /// The IFileHandler may be used to label a file and read a labeled file.
     /// </summary>
-    public class Action
+    public class Action : IDisposable
     {
         private AuthDelegateImplementation authDelegate;
         private ApplicationInfo appInfo;
@@ -77,8 +77,13 @@ namespace MipSdkDotNetQuickstart
             authDelegate = new AuthDelegateImplementation(this.appInfo);
 
             // Initialize SDK DLLs. If DLLs are missing or wrong type, this will throw an exception
-
             MIP.Initialize(MipComponent.File);
+
+            // Create MipConfiguration Object
+            MipConfiguration mipConfiguration = new MipConfiguration(appInfo, "mip_data", LogLevel.Trace, false);
+
+            // Create MipContext using Configuration
+            mipContext = MIP.CreateMipContext(mipConfiguration);
 
             // This method in AuthDelegateImplementation triggers auth against Graph so that we can get the user ID.
             var id = authDelegate.GetUserIdentity();
@@ -90,15 +95,13 @@ namespace MipSdkDotNetQuickstart
             engine = CreateFileEngine(id);
         }
 
-        /// <summary>
-        /// Unload engine, null refs to engine and profile and release all MIP resources.
-        /// </summary>
-        ~Action()
+        public void Dispose()
         {
-            // Unload the engine. This is less important for apps that create a single, long lived engine.            
+            profile.UnloadEngineAsync(engine.Settings.EngineId).Wait();
             engine = null;
             profile = null;
-            mipContext = null; 
+            mipContext.ShutDown();
+            mipContext = null;
         }
 
         /// <summary>
@@ -109,12 +112,7 @@ namespace MipSdkDotNetQuickstart
         /// <param name="authDelegate"></param>
         /// <returns></returns>
         private IFileProfile CreateFileProfile(ApplicationInfo appInfo)
-        {
-            // Initialize MipContext
-            MipConfiguration mipConfig = new MipConfiguration(appInfo, "mip_data", LogLevel.Trace, false);
-
-            mipContext = MIP.CreateMipContext(mipConfig);
-            
+        {                        
             // Initialize file profile settings to create/use local state.                
             var profileSettings = new FileProfileSettings(mipContext,
                 CacheStorageType.OnDiskEncrypted,
@@ -146,6 +144,8 @@ namespace MipSdkDotNetQuickstart
 
             // Create file settings object. Passing in empty string for the first parameter, engine ID, will cause the SDK to generate a GUID.
             // Locale settings are supported and should be provided based on the machine locale, particular for client applications.
+            // In this sample, the first parameter is a string containing the user email. This will be used as the unique identifier
+            // for the engine, used to reload the same engine across sessions. 
             var engineSettings = new FileEngineSettings(identity.Email, authDelegate, "", "en-US")
             {
                 // Provide the identity for service discovery.
@@ -221,10 +221,15 @@ namespace MipSdkDotNetQuickstart
 
                 handler.SetLabel(engine.GetLabelById(options.LabelId), labelingOptions, new ProtectionSettings());
             }
-          
+
             // The change isn't committed to the file referenced by the handler until CommitAsync() is called.
             // Pass the desired output file name in to the CommitAsync() function.
-            var result = Task.Run(async () => await handler.CommitAsync(options.OutputName)).Result;
+            bool result = false;
+            if (handler.IsModified())
+            {
+                // Returns true if any changes were made. False if nothing was changed. 
+                result = Task.Run(async () => await handler.CommitAsync(options.OutputName)).Result;
+            }
 
             // If the commit was successful and GenerateChangeAuditEvents is true, call NotifyCommitSuccessful()
             if (result && options.GenerateChangeAuditEvent)

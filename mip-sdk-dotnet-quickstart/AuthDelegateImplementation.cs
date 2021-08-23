@@ -37,9 +37,7 @@ using System.Linq;
 namespace MipSdkDotNetQuickstart
 {
     public class AuthDelegateImplementation : IAuthDelegate
-    {
-        // Set the redirect URI from the AAD Application Registration.
-        private static readonly string redirectUri = ConfigurationManager.AppSettings["ida:RedirectUri"];
+    {        
         private static readonly bool isMultitenantApp = Convert.ToBoolean(ConfigurationManager.AppSettings["ida:IsMultitenantApp"]);
         private static readonly string tenant = ConfigurationManager.AppSettings["ida:TenantGuid"];
         private ApplicationInfo appInfo;
