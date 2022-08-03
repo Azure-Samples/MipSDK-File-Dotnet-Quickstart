@@ -3,12 +3,13 @@ page_type: sample
 languages:
 - csharp
 products:
-- azure
+- m365
+- office-365
 description: "This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to label and read a label from a file."
-urlFragment: MipSdk-Dotnet-File-Quickstart
+urlFragment: MipSDK-File-Dotnet-Quickstart
 ---
 
-# MipSdk-Dotnet-File-Quickstart
+# MipSDK-File-Dotnet-Quickstart
 
 This sample application demonstrates using the Microsoft Information Protection SDK .NET wrapper to label and read a label from a file. 
 
@@ -22,7 +23,7 @@ This sample illustrates basic SDK functionality where it:
 
 ## Summary
 
-This sample application illustrates using the MIP File API to list labels, apply a label, then read the label. All SDK actions are implemented in **action.cs**. 
+This sample application illustrates using the MIP File SDK to list labels, apply a label, then read the label. All SDK actions are implemented in **action.cs**. 
 
 ## Getting Started
 
