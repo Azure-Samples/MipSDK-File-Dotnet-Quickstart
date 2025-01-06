@@ -135,7 +135,7 @@
       <Version>4.35.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.InformationProtection.File">
-      <Version>1.12.61</Version>
+      <Version>1.16.126</Version>
     </PackageReference>
     <PackageReference Include="System.IO">
       <Version>4.3.0</Version>
