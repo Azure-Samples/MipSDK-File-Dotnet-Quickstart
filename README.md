@@ -81,11 +81,11 @@ The **Application registration** screen should now be displaying your new applic
 ### Update Client ID, RedirectURI, and Application Name
 
 1. Open **app.config**.
-2. Replace **YOUR CLIENT ID** with the client ID copied from the AAD App Registration.
+2. Replace **YOUR CLIENT ID** with the client ID copied from the Microsoft Entra ID App Registration.
 3. Replace **YOUR APP NAME** with the friendly name for your application.
 4. Replace **YOUR APP VERSION** with the version of your application.
 5. If you set the application type to single-tenant, set the value of **ida:IsMultiTenantApp** to **false**. Otherwise set to **true**.
-6. If you set the application type to single-tenant, replace **YOUR TENANT GUID** with the GUID or name of your Azure Active Directly tenant.
+6. If you set the application type to single-tenant, replace **YOUR TENANT GUID** with the GUID or name of your Microsoft Entra ID tenant.
 
 ## Run the Sample
 
