@@ -30,7 +30,7 @@ This sample application illustrates using the MIP File SDK to list labels, apply
 ### Prerequisites
 
 - Visual Studio 2015 or later with Visual C# development features installed
-- For further pre-requsities please refer to https://learn.microsoft.com/en-us/information-protection/develop/setup-configure-mip#configure-your-client-workstation
+- For more detailed pre-requsities to setup and configure MIP SDK please refer to https://learn.microsoft.com/en-us/information-protection/develop/setup-configure-mip
 
 ### Sample Setup
 
