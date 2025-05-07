@@ -40,7 +40,7 @@ namespace MipSdkDotNetQuickstart
     {        
         private static readonly bool isMultitenantApp = Convert.ToBoolean(ConfigurationManager.AppSettings["ida:IsMultitenantApp"]);
         private static readonly string tenant = ConfigurationManager.AppSettings["ida:TenantGuid"];
-        private ApplicationInfo appInfo;
+        private ApplicationInfo appInfo;       
 
         // Microsoft Authentication Library IPublicClientApplication
         private IPublicClientApplication _app;
@@ -51,7 +51,7 @@ namespace MipSdkDotNetQuickstart
        
         public AuthDelegateImplementation(ApplicationInfo appInfo)
         {
-            this.appInfo = appInfo;
+            this.appInfo = appInfo;            
         }
 
         /// <summary>
@@ -85,23 +85,25 @@ namespace MipSdkDotNetQuickstart
             AuthenticationResult result = null;
 
             // Create an auth context using the provided authority and token cache
-            if (isMultitenantApp)
-                _app = PublicClientApplicationBuilder.Create(appInfo.ApplicationId)
-                    .WithAuthority(authority)
-                    .WithDefaultRedirectUri()
-                    .Build();
-            else
+            if (_app == null)
             {
-                if (authority.ToLower().Contains("common"))
+                if (isMultitenantApp)
+                    _app = PublicClientApplicationBuilder.Create(appInfo.ApplicationId)
+                        .WithAuthority(authority)
+                        .WithDefaultRedirectUri()
+                        .Build();
+                else
                 {
-                    var authorityUri = new Uri(authority);
-                    authority = String.Format("https://{0}/{1}", authorityUri.Host, tenant);
+                    if (authority.ToLower().Contains("common"))
+                    {
+                        var authorityUri = new Uri(authority);
+                        authority = String.Format("https://{0}/{1}", authorityUri.Host, tenant);
+                    }
+                    _app = PublicClientApplicationBuilder.Create(appInfo.ApplicationId)
+                        .WithAuthority(authority)
+                        .WithDefaultRedirectUri()
+                        .Build();
                 }
-                _app = PublicClientApplicationBuilder.Create(appInfo.ApplicationId)
-                    .WithAuthority(authority)
-                    .WithDefaultRedirectUri()
-                    .Build();
-
             }
             var accounts = (_app.GetAccountsAsync()).GetAwaiter().GetResult();
 
