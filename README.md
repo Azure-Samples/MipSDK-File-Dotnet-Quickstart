@@ -77,7 +77,9 @@ The **Application registration** screen should now be displaying your new applic
 2. Select **Add a platform**.
 3. Select **Mobile and desktop applications**
 4. Select the default native client redirect URI, which should look similar to **https://login.microsoftonline.com/common/oauth2/nativeclient**.
-5. Select **configure** and be sure to save and changes if required. 
+5. In the **Redirect URIs** section, enter the following redirect URIs.
+      - `http://localhost`
+6. Select **configure** and be sure to save and changes if required. 
 
 ### Update Client ID, RedirectURI, and Application Name
 
@@ -90,7 +92,7 @@ The **Application registration** screen should now be displaying your new applic
 
 ## Run the Sample
 
-Press F5 to run the sample. The console application will start and after a brief moment displays the labels available for the user.
+Press F5 to run the sample. The console application launches a browser window where the user can sign in. After signing in, the console application displays the labels available to the user.
 
 - Copy a label ID to the clipboard.
 - Paste the label in to the input prompt.
