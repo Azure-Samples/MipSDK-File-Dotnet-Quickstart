@@ -55,7 +55,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Identity.Client">
-      <Version>4.35.1</Version>
+      <Version>4.61.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.InformationProtection.File">
       <Version>1.16.126</Version>
